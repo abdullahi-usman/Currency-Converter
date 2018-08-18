@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Currency Converter</string>
+    <string name="about"><b>Abdullai Usman</b> \n<a href="abdullahidhako@gmail.com">abdullahidhako@gmail.com</a></string>
+    <string name="second_country_button_text">Select Second Currency</string>
+    <string name="first_country_button_text">Select First Currency</string>
+    <string name="zero_dollars">$ 0.00</string>
 </resources>

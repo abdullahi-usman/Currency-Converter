@@ -7,13 +7,11 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -37,6 +35,12 @@ class MainFragment : Fragment() {
 
     private var conversion_rate1: Double = 0.00
     private var conversion_rate2: Double = 0.00
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -130,12 +134,43 @@ class MainFragment : Fragment() {
         toggle_conversions.isEnabled = false
     }
 
-    fun setConvertRate(){
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId){
+            R.id.clear -> {
+                reset()
+                Toast.makeText(context!!, "Cleared", Toast.LENGTH_LONG).show()
+            }
+            R.id.about -> {
+                AlertDialog.Builder(context!!).setView(R.layout.about).show()
+            }
+            else -> return false
+        }
+
+        return true
+    }
+
+    private fun reset() {
+        amount.setText("")
+        result.setText(R.string.zero_dollars)
+        convert_rate1.setText(R.string.zero_dollars)
+        convert_rate2.setText(R.string.zero_dollars)
+        button_first_country.setText(R.string.first_country_button_text)
+        button_second_country.setText(R.string.second_country_button_text)
+        first_currency = null
+        second_currency = null
+    }
+
+    private fun setConvertRate(){
         convert_rate1.text = "${first_currency?.currencySymbol} 1.00"
         convert_rate2.text = "${second_currency?.currencySymbol} ${conversion_rate1}"
     }
 
-    fun formatAmountInputSymbol(){
+    private fun formatAmountInputSymbol(){
 
         if (amount.text.length > 0 && amount.text.startsWith(first_currency?.currencySymbol ?: "$", true).not()) {
             val cur = first_currency?.currencySymbol ?: "$"
@@ -165,7 +200,7 @@ class MainFragment : Fragment() {
         setSelectedCurrency(view, 2)
     }
 
-    fun formatDecimal(double: Double, roundUpDecimals: Boolean = true): String {
+    private fun formatDecimal(double: Double, roundUpDecimals: Boolean = true): String {
         val d = double.toString()
 
         var main: String
@@ -244,7 +279,7 @@ class MainFragment : Fragment() {
         return string.toString()
     }
 
-    fun calculate() {
+    private fun calculate() {
 
         val amount =  amount.text.toString().replace(first_currency?.currencySymbol ?: "$", "", true)
 
@@ -271,9 +306,9 @@ class MainFragment : Fragment() {
                 result.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
             }
 
-            val sym = "${second_currency?.currencySymbol}"
+            //val sym = "${second_currency?.currencySymbol}"
 
-            result.text = "${sym} $res"
+            result.text = "${second_currency?.currencySymbol} $res"
 
             if (toggle_conversions.isEnabled.not()) {
                 toggle_conversions.isEnabled = true
@@ -281,7 +316,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun setSelectedCurrency(textView: TextView, pos: Int) {
+    private fun setSelectedCurrency(textView: TextView, pos: Int) {
         val currencies_dialog: androidx.appcompat.app.AlertDialog
 
         currencies_dialog = androidx.appcompat.app.AlertDialog.Builder(context!!).setAdapter(CurrenciesAdapter(context!!)) { di, i ->
@@ -325,10 +360,14 @@ class MainFragment : Fragment() {
     }
 
     fun fetchConversionRates() {
+
         if (first_currency == null || second_currency == null) return
 
         button_first_country.isEnabled = false
         button_second_country.isEnabled = false
+
+        first_country_container.isEnabled = false
+        second_country_container.isEnabled = false
 
         var snackbar = Snackbar.make(this.view!!, "Getting conversion rates...", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Cancel") {
@@ -340,6 +379,9 @@ class MainFragment : Fragment() {
             override fun onChanged(t: Pair<Double, Double>?) {
 
                 snackbar.dismiss()
+
+                first_country_container.isEnabled = true
+                second_country_container.isEnabled = true
 
                 button_first_country.isEnabled = true
                 button_second_country.isEnabled = true

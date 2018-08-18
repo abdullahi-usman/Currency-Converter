@@ -11,8 +11,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
 
+        if (BuildConfig.DEBUG.not()) {
+            Fabric.with(this, Crashlytics())
+        }
         setContentView(R.layout.main_activity)
 
         if (savedInstanceState == null) {

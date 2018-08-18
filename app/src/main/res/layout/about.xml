@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/about_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal|center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="42dp"
+        android:autoLink="email"
+        android:clickable="true"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:linksClickable="true"
+        android:text="@string/about" />
+</FrameLayout>

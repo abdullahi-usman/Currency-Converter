@@ -6,8 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:fontFamily">@font/milonga</item>
-        <item name="android:font">@font/milonga</item>
+        <item name="android:fontFamily">@font/alice</item>
+        <item name="android:font">@font/alice</item>
     </style>
 
 </resources>
